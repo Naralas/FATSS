@@ -13,7 +13,6 @@ class FSGUI : public QWidget, private Ui::FSGUI
     Q_OBJECT
 
 private:
-    DiskView *diskViewWidget;
 public:
     explicit FSGUI(QWidget *parent = nullptr);
 

@@ -1,16 +1,16 @@
 #ifndef DISKVIEW_H
 #define DISKVIEW_H
 
-#include <QGraphicsView>
-#include <QGraphicsRectItem>
-#include <QGraphicsTextItem>
+#include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
 #include <QString>
-#include <QRect>
 
-class DiskView : public QGraphicsView
+class ClusterWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    DiskView(QWidget *parent = nullptr);
+    ClusterWidget(QWidget *parent = nullptr);
 };
 
 #endif // DISKVIEW_H
