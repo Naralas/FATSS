@@ -10,11 +10,9 @@
 
 class Console : public QWidget
 {
-    Q_OBJECT
-
 public:
 
-    Console();
+    Console(QWidget *parent);
     ~Console();
 
 public slots:

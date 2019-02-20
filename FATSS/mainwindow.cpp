@@ -8,7 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setCentralWidget(new Console());
+    QWidget *containerWidget = new QWidget(this);
+    QVBoxLayout *containerLayout = new QVBoxLayout(containerWidget);
+
+
+    containerLayout->addWidget(new Console(this));
+
+    this->setCentralWidget(containerWidget);
 }
 
 MainWindow::~MainWindow()

@@ -1,13 +1,13 @@
 #include "console.h"
 
-Console::Console()
+Console::Console(QWidget *parent) : QWidget(parent)
 {
-    txtBlockCommand = new QTextEdit();
+    txtBlockCommand = new QTextEdit(this);
     txtBlockCommand->setReadOnly(true);
     txtBlockCommand->setStyleSheet("QTextEdit { background-color: black; color: green }");
     txtBlockCommand->setText("Maxime@pc >");
 
-    lineEditCommand = new QLineEdit();
+    lineEditCommand = new QLineEdit(this);
     lineEditCommand->setStyleSheet("QLineEdit { background-color: black; color: green }");
     connect(lineEditCommand, &QLineEdit::returnPressed, this, &Console::submitCommand);
 
