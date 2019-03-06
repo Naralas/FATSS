@@ -125,6 +125,10 @@ QString FileSystem::createFile(QString Name, int Size)
     //Updates the free clusters counter
     freeClusters -= neededClusters;
 
+    //For the signal
+    FileEntry* file = new FileEntry(Name, &clusters);
+    emit createdFile(file);
+
     return "File successfully created";
 }
 
@@ -133,7 +137,7 @@ QString FileSystem::createFile(QString Name, int Size)
 /// \brief FileSystem::delFile: Delete the file with the given filename.
 /// \param name
 ///
-void FileSystem::delFile(QString name)
+QString FileSystem::delFile(QString name)
 {
     //Find file in root directory
     int indexCluster = -1;
@@ -146,7 +150,7 @@ void FileSystem::delFile(QString name)
     }
 
     if(indexCluster == -1)
-        return; //"No file with this name";
+        return "No file with this name";
 
     //Unset the chaining clusters
     int lastIndex;
@@ -158,7 +162,9 @@ void FileSystem::delFile(QString name)
 
     } while(fat->at(indexCluster).second != -1);
 
-    return;// "file " + name + " has been removed successfully";
+
+    emit deletedFile(name);
+    return "file " + name + " has been removed successfully";
 }
 
 

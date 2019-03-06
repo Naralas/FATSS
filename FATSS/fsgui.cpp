@@ -8,7 +8,7 @@ FSGUI::FSGUI(QWidget *parent) : QWidget(parent)
     lvTable = new QListWidget(this);
 
     clusterSize = QSize(15,10);
-    initClusters(clusterSize);
+    initClusters(QSize(30, 25));
 
     lvTable->setMinimumWidth(200);
     lvTable->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -42,9 +42,15 @@ void FSGUI::initClusters(QSize diskLayout)
 
     addTableItem("Example item");
 
-    setClusterUsed(0,0);
-    setClusterUsed(1,0);
-    setClusterUsed(2,0);
+    QString colorName = FileColorManager::getColor()->name();
+    QString colorName2 = FileColorManager::getColor()->name();
+    setClusterUsed(0,0, colorName);
+    setClusterUsed(1,0, colorName);
+    setClusterUsed(2,0, colorName);
+
+    setClusterUsed(3,0, colorName2);
+    setClusterUsed(4,0, colorName2);
+    setClusterUsed(5,0,colorName2);
 }
 
 FSGUI::~FSGUI()
@@ -54,14 +60,14 @@ FSGUI::~FSGUI()
 
 
 
-void FSGUI::setClusterUsed(int x, int y, bool used)
+void FSGUI::setClusterUsed(int x, int y,QString colorName, bool used)
 {
     QWidget *targetWidget = clusterWidgets.at(x)->at(y);
 
     if(used)
     {
-        //targetWidget->setStyleSheet("background-color:" +  FileColorManager::getColor()->name() + ";");
-        targetWidget->setStyleSheet("background-color: blue");
+        targetWidget->setStyleSheet("background-color:" + colorName + ";");
+        //targetWidget->setStyleSheet("background-color: blue");
     }
     else
         targetWidget->setStyleSheet("background-color: lightgray;");
@@ -73,19 +79,20 @@ void FSGUI::setClusterUsed(int x, int y, bool used)
 void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
 {
     addTableItem(fileEntry->fileName);
+    QString colorName = FileColorManager::getColor()->name();
     for(int i = 0; i < fileEntry->clusterIndex->size(); i++)
     {
         int index = fileEntry->clusterIndex->at(i);
         switch(action)
         {
             case FileEntryAction::INSERT:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), true);
+                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName,  true);
                 break;
             case FileEntryAction::UPDATE:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), true);
+                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName, true);
                 break;
             case FileEntryAction::DELETE:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), !true);
+                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName, !true);
                 break;
         }
 

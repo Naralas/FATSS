@@ -2,15 +2,16 @@
 #define FILEENTRY_H
 
 #include <QObject>
+#include <QList>
 
 class FileEntry : public QObject
 {
     Q_OBJECT
 private:
 public:
+    explicit FileEntry(QString name, QList<int>* clusterList, QObject *parent = nullptr);
     QString fileName;
-    QList<int> *clusterIndex;
-    explicit FileEntry(QObject *parent = nullptr);
+    QList<int>* clusterIndex;
 
 signals:
 

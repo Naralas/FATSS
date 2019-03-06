@@ -2,15 +2,21 @@
 #define FILESYSTEM_H
 
 #include <QWidget>
+#include "fileentry.h"
 
-class FileSystem
+class FileSystem : QObject
 {
+    Q_OBJECT
+
 public:
     FileSystem(int Size);
     void format();
     QString createFile(QString name, int size);
-    void delFile(QString name);
+    QString delFile(QString name);
 
+signals:
+    void createdFile(FileEntry* file);
+    void deletedFile(QString filename);
 
 private:
     int clusterSize;
