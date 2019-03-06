@@ -29,15 +29,14 @@ SOURCES += \
     filesystem.cpp \
     console.cpp \
     fsgui.cpp \
-    diskview.cpp
+    fileentry.cpp
 
 HEADERS += \
         mainwindow.h \
     filesystem.h \
     console.h \
     fsgui.h \
-    diskview.h
+    fileentry.h
 
 FORMS += \
-        mainwindow.ui \
-    fsgui.ui
+        mainwindow.ui
