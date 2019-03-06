@@ -29,14 +29,17 @@ SOURCES += \
     filesystem.cpp \
     console.cpp \
     fsgui.cpp \
-    fileentry.cpp
+    fileentry.cpp \
+    filecolormanager.cpp
 
 HEADERS += \
         mainwindow.h \
     filesystem.h \
     console.h \
     fsgui.h \
-    fileentry.h
+    fileentry.h \
+    fileentryaction.h \
+    filecolormanager.h
 
 FORMS += \
         mainwindow.ui

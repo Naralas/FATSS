@@ -7,9 +7,9 @@ class FileEntry : public QObject
 {
     Q_OBJECT
 private:
-    QString fileName;
-
 public:
+    QString fileName;
+    QList<int> *clusterIndex;
     explicit FileEntry(QObject *parent = nullptr);
 
 signals:

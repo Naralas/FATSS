@@ -1,6 +1,10 @@
 #ifndef FSGUI_H
 #define FSGUI_H
 
+#include "fileentry.h"
+#include "fileentryaction.h"
+#include "filecolormanager.h"
+
 #include <QWidget>
 #include <QListWidget>
 #include <QStringListModel>
@@ -18,8 +22,9 @@ private:
     QGridLayout *clusterLayout;
     QList<QList<QWidget*>*> clusterWidgets;
 
+    QSize clusterSize;
     void initClusters(QSize diskLayout);
-
+    void addTableItem(QString item);
     ~FSGUI();
 public:
     explicit FSGUI(QWidget *parent = nullptr);
@@ -28,7 +33,9 @@ public:
 signals:
 
 public slots:
-    void addTableItem(QString item);
+    void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
+    void highlightFileClusters(FileEntry* entry);
+
 };
 
 #endif // FSGUI_H
