@@ -17,6 +17,7 @@ Console::Console(QWidget *parent) : QWidget(parent)
 
     consoleHandle = "default";
 
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
 Console::~Console()
