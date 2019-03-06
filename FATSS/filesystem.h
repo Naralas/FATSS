@@ -13,11 +13,11 @@ public:
 
 
 private:
+    int clusterSize;
     int size;
     int freeClusters;
     QString name;
     bool isReady;
-    int clusterNumber;
 
     QVector<QPair<int, int>>* fat;
     QVector<QPair<QString, int>>* rootDir;
