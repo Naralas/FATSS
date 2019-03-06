@@ -1,6 +1,8 @@
 #include "fileentry.h"
 
-FileEntry::FileEntry(QObject *parent) : QObject(parent)
+FileEntry::FileEntry(QString name, QList<int>* clusterList, QObject *parent) : QObject(parent)
 {
-
+    fileName = name;
+    clusterIndex = clusterList;
 }
+

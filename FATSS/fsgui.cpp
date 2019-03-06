@@ -7,7 +7,7 @@ FSGUI::FSGUI(QWidget *parent) : QWidget(parent)
     clusterLayout = new QGridLayout(this);
     lvTable = new QListWidget(this);
 
-    initClusters(QSize(15, 10));
+    initClusters(QSize(30, 25));
 
     lvTable->setMinimumWidth(200);
     lvTable->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
