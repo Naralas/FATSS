@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "console.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QWidget *containerWidget = new QWidget(this);
     QVBoxLayout *containerLayout = new QVBoxLayout(containerWidget);
 
-
+    containerLayout->addWidget(new FSGUI(this));
     containerLayout->addWidget(new Console(this));
 
     this->setCentralWidget(containerWidget);
