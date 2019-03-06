@@ -7,12 +7,29 @@ FSGUI::FSGUI(QWidget *parent) : QWidget(parent)
     clusterLayout = new QGridLayout(this);
     lvTable = new QListWidget(this);
 
-    clusterSize = QSize(15,10);
-    initClusters(QSize(30, 25));
+    clusterSize = QSize(25,25);
+    initClusters(clusterSize);
 
     lvTable->setMinimumWidth(200);
     lvTable->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     clusterLayout->setSpacing(1);
+
+
+    connect(lvTable, &QListWidget::itemPressed, [=]
+        (QListWidgetItem *item)
+        {
+            FileEntry *targetEntry;
+            for(int i = 0; i < fileEntries.size(); i++)
+            {
+                targetEntry = fileEntries[i];
+                if(QString::compare(targetEntry->fileName, item->text()) == 0)
+                {
+                    highlightFileClusters(targetEntry);
+                    break;
+                }
+            }
+        }
+    );
 
     mainLayout->addWidget(lvTable);
     mainLayout->addLayout(clusterLayout);
@@ -40,17 +57,27 @@ void FSGUI::initClusters(QSize diskLayout)
     }
 
 
-    addTableItem("Example item");
+    // memory leak but only for tests
+    // hope nobody sees this
+    // it will be handled differently
+    QList<int> *entryItemList = new QList<int>();
+    entryItemList->append(0);
+    entryItemList->append(1);
+    entryItemList->append(2);
+    entryItemList->append(29);
+    entryItemList->append(25);
+    FileEntry *entry = new FileEntry("Example item", entryItemList);
+    updateFileEntry(entry, FileEntryAction::INSERT);
 
-    QString colorName = FileColorManager::getColor()->name();
-    QString colorName2 = FileColorManager::getColor()->name();
-    setClusterUsed(0,0, colorName);
-    setClusterUsed(1,0, colorName);
-    setClusterUsed(2,0, colorName);
+    QList<int> *entryItemList2 = new QList<int>();
+    entryItemList2->append(4);
+    entryItemList2->append(5);
+    entryItemList2->append(6);
+    entryItemList2->append(9);
+    entryItemList2->append(12);
+    FileEntry *entry2 = new FileEntry("Example item2", entryItemList2);
 
-    setClusterUsed(3,0, colorName2);
-    setClusterUsed(4,0, colorName2);
-    setClusterUsed(5,0,colorName2);
+    updateFileEntry(entry2, FileEntryAction::INSERT);
 }
 
 FSGUI::~FSGUI()
@@ -67,7 +94,6 @@ void FSGUI::setClusterUsed(int x, int y,QString colorName, bool used)
     if(used)
     {
         targetWidget->setStyleSheet("background-color:" + colorName + ";");
-        //targetWidget->setStyleSheet("background-color: blue");
     }
     else
         targetWidget->setStyleSheet("background-color: lightgray;");
@@ -82,17 +108,19 @@ void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
     QString colorName = FileColorManager::getColor()->name();
     for(int i = 0; i < fileEntry->clusterIndex->size(); i++)
     {
+        if(action == FileEntryAction::INSERT)
+            fileEntries.append(fileEntry);
         int index = fileEntry->clusterIndex->at(i);
         switch(action)
         {
             case FileEntryAction::INSERT:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName,  true);
+                setClusterUsed(index % clusterSize.width(), index / clusterSize.height(), colorName,  true);
                 break;
             case FileEntryAction::UPDATE:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName, true);
+                setClusterUsed(index % clusterSize.width(), index / clusterSize.height(), colorName, true);
                 break;
             case FileEntryAction::DELETE:
-                setClusterUsed(index / clusterSize.width(), index % clusterSize.height(), colorName, !true);
+                setClusterUsed(index % clusterSize.width(), index / clusterSize.height(), colorName, !true);
                 break;
         }
 
@@ -101,7 +129,13 @@ void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
 
 void FSGUI::highlightFileClusters(FileEntry *entry)
 {
-
+    qDebug() << entry->fileName;
+    for(int i = 0; i < clusterSize.width(); i++)
+    {
+        for(int j = 0; j < clusterSize.height(); j++)
+        {
+        }
+    }
 }
 
 void FSGUI::addTableItem(QString item)
