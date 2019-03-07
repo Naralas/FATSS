@@ -51,6 +51,8 @@ void FSGUI::initClusters(QSize diskLayout)
     setClusterUsed(3,0, colorName2);
     setClusterUsed(4,0, colorName2);
     setClusterUsed(5,0,colorName2);
+
+
 }
 
 FSGUI::~FSGUI()
