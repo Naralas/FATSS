@@ -10,6 +10,7 @@
 #include <QStringListModel>
 #include <QLayout>
 #include <QLabel>
+#include <QRgb>
 
 
 class FSGUI : public QWidget
@@ -20,8 +21,10 @@ private:
     QHBoxLayout *mainLayout;
     QListWidget *lvTable;
     QGridLayout *clusterLayout;
-    QList<FileEntry*> fileEntries;
+    QMap<QPair<int,int>, FileEntry*> fileEntries;
     QList<QList<QWidget*>*> clusterWidgets;
+    QList<QWidget*> usedClusters;
+
 
     QSize clusterSize;
     void initClusters(QSize diskLayout);
@@ -35,7 +38,7 @@ signals:
 
 public slots:
     void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
-    void highlightFileClusters(FileEntry* entry);
+    void highlightFileClusters(FileEntry* highlightEntry);
 
 };
 

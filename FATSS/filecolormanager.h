@@ -15,6 +15,7 @@ private:
 
     ~FileColorManager();
 public:
+    static QColor* unhighlightColor;
     static FileColorManager* getInstance();
     static QColor* getColor();
 };

@@ -11,8 +11,8 @@ private:
 public:
     explicit FileEntry(QString name, QList<int>* clusterList, QObject *parent = nullptr);
     QString fileName;
-    QList<int>* clusterIndex;
-
+    QList<int>* clusterIndexes;
+    QColor *displayColor;
 signals:
 
 public slots:
