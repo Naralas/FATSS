@@ -2,6 +2,7 @@
 #define FILECOLORMANAGER_H
 
 #include <QColor>
+#include <QDateTime>
 
 class FileColorManager
 {

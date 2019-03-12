@@ -20,6 +20,7 @@ private:
     QHBoxLayout *mainLayout;
     QListWidget *lvTable;
     QGridLayout *clusterLayout;
+    QList<FileEntry*> fileEntries;
     QList<QList<QWidget*>*> clusterWidgets;
 
     QSize clusterSize;

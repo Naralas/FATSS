@@ -4,7 +4,7 @@ FileColorManager* FileColorManager::managerInstance = 0;
 
 FileColorManager::FileColorManager()
 {
-
+    qsrand(QDateTime::currentMSecsSinceEpoch() / 1000);
 }
 
 QColor* FileColorManager::getNewColor()
