@@ -10,6 +10,8 @@
 #include <QStringListModel>
 #include <QLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QRgb>
 
 
 class FSGUI : public QWidget
@@ -18,14 +20,18 @@ class FSGUI : public QWidget
 
 private:
     QHBoxLayout *mainLayout;
+    QVBoxLayout *entriesLayout;
     QListWidget *lvTable;
     QGridLayout *clusterLayout;
     QList<FileEntry*> fileEntries;
     QList<QList<QWidget*>*> clusterWidgets;
+    QList<QWidget*> usedClusters;
+
 
     QSize clusterSize;
     void initClusters(QSize diskLayout);
     void addTableItem(QString item);
+    void setWidgetColor(QWidget *targetWidget, QColor *color);
     ~FSGUI();
 public:
     explicit FSGUI(QWidget *parent = nullptr);
@@ -35,7 +41,8 @@ signals:
 
 public slots:
     void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
-    void highlightFileClusters(FileEntry* entry);
+    void highlightFileClusters(FileEntry* highlightEntry);
+    void resetHighlights();
 
 };
 
