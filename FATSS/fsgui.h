@@ -1,4 +1,4 @@
-#ifndef FSGUI_H
+﻿#ifndef FSGUI_H
 #define FSGUI_H
 
 #include "fileentry.h"
@@ -36,13 +36,16 @@ private:
 public:
     explicit FSGUI(QWidget *parent = nullptr);
 
-    void setClusterUsed(int x, int y,QString colorName, bool used = true);
 signals:
 
 public slots:
     void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
     void highlightFileClusters(FileEntry* highlightEntry);
+    void insertFileEntry(FileEntry *FileEntry);
+    void updateFileEntry(FileEntry *fileEntry);
+    void removeFileEntry(FileEntry* fileEntry);
     void resetHighlights();
+
 
 };
 

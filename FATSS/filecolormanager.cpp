@@ -1,13 +1,15 @@
 #include "filecolormanager.h"
 
 FileColorManager* FileColorManager::managerInstance = 0;
-QColor* FileColorManager::unhighlightColor;
+QColor *FileColorManager::unhighlightColor = new QColor(150,150,150);
+QColor* FileColorManager::unusedColor = new QColor(215,215,215);
 
 FileColorManager::FileColorManager()
 {
     qsrand(QDateTime::currentMSecsSinceEpoch() / 1000);
-    FileColorManager::unhighlightColor = new QColor(150,150,150);
+
     usedColors.append(FileColorManager::unhighlightColor);
+    usedColors.append(FileColorManager::unusedColor);
 }
 
 QColor* FileColorManager::getNewColor()
