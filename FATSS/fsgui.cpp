@@ -3,8 +3,9 @@
 
 FSGUI::FSGUI(QWidget *parent) : QWidget(parent)
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    mainLayout = new QHBoxLayout(this);
     clusterLayout = new QGridLayout(this);
+    entriesLayout = new QVBoxLayout(this);
     lvTable = new QListWidget(this);
 
     clusterSize = QSize(25,25);
@@ -31,7 +32,12 @@ FSGUI::FSGUI(QWidget *parent) : QWidget(parent)
         }
     );
 
-    mainLayout->addWidget(lvTable);
+    QPushButton *btnClear = new QPushButton("Clear", this);
+    entriesLayout->addWidget(lvTable);
+    entriesLayout->addWidget(btnClear);
+
+    mainLayout->addLayout(entriesLayout);
+    //mainLayout->addWidget(lvTable);
     mainLayout->addLayout(clusterLayout);
 }
 
@@ -90,7 +96,6 @@ FSGUI::~FSGUI()
 void FSGUI::setClusterUsed(int x, int y, QString colorName, bool used)
 {
     QWidget *targetWidget = clusterWidgets.at(x)->at(y);
-
     if(used)
     {
         targetWidget->setStyleSheet("background-color:" + colorName + ";");
@@ -102,6 +107,7 @@ void FSGUI::setClusterUsed(int x, int y, QString colorName, bool used)
     targetWidget->style()->polish(targetWidget);
 
     usedClusters.append(targetWidget);
+    //usedClusters.append(
 }
 
 void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
@@ -132,22 +138,25 @@ void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
 
 void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
 {
-    for(FileEntry *entry : fileEntries)
+    /*for(FileEntry *entry : fileEntries)
     {
         QColor *entryColor = entry->displayColor;
         for(int i = 0; i < entry->clusterIndexes->size(); i++)
         {
             int clusterIndex = entry->clusterIndexes->at(i);
 
-            QWidget *targetWidget = clusterWidgets.at(clusterIndex * clusterSize.width())->at(clusterIndex * clusterSize.height());
+            QWidget *targetWidget = clusterWidgets.at(clusterIndex % clusterSize.width())->at(clusterIndex / clusterSize.height());
             if(highlightEntry != entry)
             {
                 QColor displayColor = QColor::fromRgb(entryColor->rgba());
                 displayColor.setAlpha(40);
+                qDebug() << displayColor.rgba().name();
                 targetWidget->setStyleSheet("background-color:" + displayColor.name() + ";");
             }
+            targetWidget->style()->unpolish(targetWidget);
+            targetWidget->style()->polish(targetWidget);
         }
-    }
+    }*/
     /*for(int i = 0; i < clusterWidgets.size(); i++)
     {
         for(int j = 0; j < clusterWidgets.at(i)->size(); j++)
@@ -159,6 +168,26 @@ void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
             targetWidget->style()->polish(targetWidget);
         }
     }*/
+
+    for(QWidget *targetWidget : usedClusters)
+    {
+
+        targetWidget->setStyleSheet("background-color:" + FileColorManager::unhighlightColor->name() + ";");
+        targetWidget->style()->unpolish(targetWidget);
+        targetWidget->style()->polish(targetWidget);
+    }
+
+
+    for(int i = 0; i < highlightEntry->clusterIndexes->size();i++)
+    {
+        int clusterIndex = highlightEntry->clusterIndexes->at(i);
+
+        QWidget *targetWidget = clusterWidgets.at(clusterIndex % clusterSize.width())->at(clusterIndex / clusterSize.height());
+        targetWidget->setStyleSheet("background-color:" + highlightEntry->displayColor->name() + ";");
+
+        targetWidget->style()->unpolish(targetWidget);
+        targetWidget->style()->polish(targetWidget);
+    }
 }
 
 void FSGUI::addTableItem(QString item)

@@ -10,6 +10,7 @@
 #include <QStringListModel>
 #include <QLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QRgb>
 
 
@@ -19,9 +20,10 @@ class FSGUI : public QWidget
 
 private:
     QHBoxLayout *mainLayout;
+    QVBoxLayout *entriesLayout;
     QListWidget *lvTable;
     QGridLayout *clusterLayout;
-    QMap<QPair<int,int>, FileEntry*> fileEntries;
+    QList<FileEntry*> fileEntries;
     QList<QList<QWidget*>*> clusterWidgets;
     QList<QWidget*> usedClusters;
 
