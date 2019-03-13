@@ -31,6 +31,7 @@ private:
     QSize clusterSize;
     void initClusters(QSize diskLayout);
     void addTableItem(QString item);
+    void setWidgetColor(QWidget *targetWidget, QColor *color);
     ~FSGUI();
 public:
     explicit FSGUI(QWidget *parent = nullptr);
@@ -41,6 +42,7 @@ signals:
 public slots:
     void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
     void highlightFileClusters(FileEntry* highlightEntry);
+    void resetHighlights();
 
 };
 

@@ -6,7 +6,7 @@ QColor* FileColorManager::unhighlightColor;
 FileColorManager::FileColorManager()
 {
     qsrand(QDateTime::currentMSecsSinceEpoch() / 1000);
-    FileColorManager::unhighlightColor = new QColor(255,255,255);
+    FileColorManager::unhighlightColor = new QColor(150,150,150);
     usedColors.append(FileColorManager::unhighlightColor);
 }
 
