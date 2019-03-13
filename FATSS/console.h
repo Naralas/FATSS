@@ -10,19 +10,19 @@
 
 class Console : public QWidget
 {
+    Q_OBJECT
+
 public:
 
     Console(QWidget *parent);
+    void connectFileSystem(FileSystem* fs);
     ~Console();
 
-public slots:
-    void writeToConsole(QString Message);
-
-
 private slots:
-
     void submitCommand();
 
+signals:
+    void createdFile(QString filename, int size);
 
 private:
 
@@ -35,17 +35,14 @@ private:
 
 
     //Methods
-    void createVolume();
-    void formatVolume();
-    void delVolume();
-    void createFile();
-    void delFile();
+    void createFile(QStringList args);
 
 
 
     //Helpers
     void writeCommand(QString command);
     void writeResult(QString message);
+
 };
 
 #endif // CONSOLE_H

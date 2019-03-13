@@ -12,9 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QVBoxLayout *containerLayout = new QVBoxLayout(containerWidget);
 
     fs = new FileSystem(100);
-    connect(fs, FileSystem::createdFile, )
+    fsgui = new FSGUI(this);
+    connect(fs, &FileSystem::createdFile, fsgui, &FSGUI::highlightFileClusters);
 
-    containerLayout->addWidget(new FSGUI(this));
+    containerLayout->addWidget(fsgui);
     containerLayout->addWidget(new Console(this));
 
     this->setCentralWidget(containerWidget);

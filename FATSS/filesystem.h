@@ -1,10 +1,10 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
-#include <QWidget>
+#include <QObject>
 #include "fileentry.h"
 
-class FileSystem : QObject
+class FileSystem : public QObject
 {
     Q_OBJECT
 

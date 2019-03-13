@@ -5,54 +5,11 @@ FileSystem::FileSystem(int Size)
     fat = new QVector<QPair<int, int>>();
     rootDir = new QVector<QPair<QString, int>>();
 
-    isReady = false;
     size = Size;
 
-    if(Size < 12) // < 16 MB - doesn't work
-    {
+    //Size equals clusters
 
-    }
-    else if (Size < 64) // < 64MB
-    {
-        //512b
-        clusterSize = 512;
-    }
-    else if (Size < 128) // < 128MB
-    {
-        //1kb
-        clusterSize = 1024;
-    }
-    else if (Size < 256) // < 256MB
-    {
-        //2kb
-        clusterSize = 2048;
-    }
-    else if (Size < 8000) // < 8GB
-    {
-        //4kb
-        clusterSize = 4096;
-    }
-    else if (Size < 16000) // < 16GB
-    {
-        //8kb
-        clusterSize = 8192;
-    }
-    else if (Size < 32000) // < 32GB
-    {
-        //16kb
-        clusterSize = 16384;
-    }
-    else if (Size < 200000) // < 2TB
-    {
-        //32kb
-        clusterSize = 32768;
-    }
-    else // > 2TB - doesn't work
-    {
-
-    }
-
-    freeClusters = Size / clusterSize;
+    freeClusters = Size;
     data = new QVector<int>(freeClusters);
 }
 
@@ -62,14 +19,8 @@ FileSystem::FileSystem(int Size)
 ///
 void FileSystem::format()
 {
-    isReady = true;
-
     //fill the data so we can use replace() later
-    data->fill(-1, freeClusters);
-
-    //TODO - create sectors and their positions in the memory
-    int reservedSector = 32;
-
+    fat->fill(QPair<int, int>(0, 1), freeClusters);
 
 }
 
@@ -82,10 +33,6 @@ void FileSystem::format()
 ///
 QString FileSystem::createFile(QString Name, int Size)
 {
-    //Check if volume is formatted
-    if(!isReady)
-        return "Volume is not ready";
-
 
     //Check if there's enough place
     int neededClusters = Size / clusterSize;
@@ -97,7 +44,7 @@ QString FileSystem::createFile(QString Name, int Size)
     //Add it to the rootDir
     QPair<QString, int> fileEntry(Name, index);
     rootDir->append(fileEntry);
-    int entryNum = rootDir->indexOf(fileEntry);
+    //int entryNum = rootDir->indexOf(fileEntry);
 
     //Create the array containing the indexes of the free clusters to use
     QList<int> clusters;
@@ -118,7 +65,6 @@ QString FileSystem::createFile(QString Name, int Size)
     for(int i = 0; i < neededClusters-1; i++)
     {
         fat->insert(clusters[i], QPair<int, int>(1, clusters[i+1]));
-        data->replace(i, entryNum);
     }
     fat->insert(clusters[neededClusters-1], QPair<int, int>(1, -1));
 
