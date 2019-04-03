@@ -84,6 +84,7 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList2->append(9);
     entryItemList2->append(12);
     FileEntry *entry2 = new FileEntry("Example item2", entryItemList2);
+
     */
 }
 
@@ -148,29 +149,21 @@ void FSGUI::removeFileEntry(FileEntry *fileEntry)
     fileEntries.removeAt(fileEntries.indexOf(fileEntry));
 }
 
-//void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
-//{
-//    qDebug() << "IN GUI CREATE";
+void FSGUI::updateFileEntry(FileEntry *fileEntry)
+{
 
-//    addTableItem(fileEntry->fileName);
-//    QColor *color = FileColorManager::getColor();
-//    fileEntry->displayColor = color;
-//    for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
-//    {
-//        qDebug() << "entry: " << fileEntry->clusterIndexes;
-//        if(action == FileEntryAction::INSERT)
-//            fileEntries.append(fileEntry);
+    for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
+    {
+        int index = fileEntry->clusterIndexes->at(i);
+        QWidget *targetWidget = clusterWidgets.at(index % clusterSize.width())->at(index / clusterSize.height());
 
-//        int index = fileEntry->clusterIndexes->at(i);
-//        QWidget *targetWidget = clusterWidgets.at(index % clusterSize.width())->at(index / clusterSize.height());
+        if(!usedClusters.contains(targetWidget))
+            usedClusters.append(targetWidget);
 
-//        if(!usedClusters.contains(targetWidget))
-//            usedClusters.append(targetWidget);
+        setWidgetColor(targetWidget, fileEntry->displayColor);
+    }
 
-//        setWidgetColor(targetWidget, fileEntry->displayColor);
-//    }
-
-//}
+}
 
 void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
 {
@@ -178,7 +171,7 @@ void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
     {
         setWidgetColor(targetWidget, FileColorManager::unhighlightColor);
     }
-
+    qDebug() << highlightEntry->clusterIndexes;
     for(int i = 0; i < highlightEntry->clusterIndexes->size();i++)
     {
         int clusterIndex = highlightEntry->clusterIndexes->at(i);
