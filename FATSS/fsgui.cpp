@@ -75,7 +75,7 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList->append(29);
     entryItemList->append(25);
     FileEntry *entry = new FileEntry("Example item", entryItemList);
-    updateFileEntry(entry, FileEntryAction::INSERT);
+    //updateFileEntry(entry, FileEntryAction::INSERT);
 
     QList<int> *entryItemList2 = new QList<int>();
     entryItemList2->append(4);
@@ -85,7 +85,7 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList2->append(12);
     FileEntry *entry2 = new FileEntry("Example item2", entryItemList2);
 
-    updateFileEntry(entry2, FileEntryAction::INSERT);
+    //updateFileEntry(entry2, FileEntryAction::INSERT);
 }
 
 FSGUI::~FSGUI()
@@ -114,11 +114,14 @@ void FSGUI::setClusterUsed(int x, int y, QString colorName, bool used)
 
 void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
 {
+    qDebug() << "IN GUI CREATE";
+
     addTableItem(fileEntry->fileName);
     QColor *color = FileColorManager::getColor();
     fileEntry->displayColor = color;
     for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
     {
+        qDebug() << "entry: " << fileEntry->clusterIndexes;
         if(action == FileEntryAction::INSERT)
             fileEntries.append(fileEntry);
         int index = fileEntry->clusterIndexes->at(i);

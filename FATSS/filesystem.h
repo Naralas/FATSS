@@ -2,7 +2,10 @@
 #define FILESYSTEM_H
 
 #include <QObject>
+#include <QDebug>
 #include "fileentry.h"
+#include "fileentryaction.h"
+#include "fatentry.h"
 
 class FileSystem : public QObject
 {
@@ -14,8 +17,10 @@ public:
     QString createFile(QString name, int size);
     QString delFile(QString name);
 
+
+    ~FileSystem();
 signals:
-    void createdFile(FileEntry* file);
+    void createdFile(FileEntry* file, FileEntryAction action);
     void deletedFile(QString filename);
 
 private:
@@ -25,7 +30,7 @@ private:
     QString name;
     bool isReady;
 
-    QVector<QPair<int, int>>* fat;
+    QVector<FatEntry*> *fat;
     QVector<QPair<QString, int>>* rootDir;
 
     QVector<int>* data;

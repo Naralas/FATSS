@@ -22,6 +22,7 @@ private:
     Ui::MainWindow *ui;
     FileSystem* fs;
     FSGUI* fsgui;
+    Console* console;
 };
 
 #endif // MAINWINDOW_H

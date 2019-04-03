@@ -8,7 +8,7 @@ Console::Console(QWidget *parent) : QWidget(parent)
     txtBlockCommand->setStyleSheet("QTextEdit { background-color: black; color: green }");
 
     lineEditCommand = new QLineEdit(this);
-    lineEditCommand->setStyleSheet("QLineEdit { background-color: black; color: green }");
+    //lineEditCommand->setStyleSheet("QLineEdit { background-color: black; color: green }");
     connect(lineEditCommand, &QLineEdit::returnPressed, this, &Console::submitCommand);
 
     vLayout =  new QVBoxLayout(this);

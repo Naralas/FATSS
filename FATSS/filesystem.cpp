@@ -2,9 +2,12 @@
 
 FileSystem::FileSystem(int Size)
 {
-    fat = new QVector<QPair<int, int>>();
     rootDir = new QVector<QPair<QString, int>>();
-
+    this->fat = new QVector<FatEntry*>();
+    for(int i = 0; i < Size; i++)
+    {
+        fat->insert(i, new FatEntry());
+    }
     size = Size;
 
     //Size equals clusters
@@ -20,8 +23,6 @@ FileSystem::FileSystem(int Size)
 void FileSystem::format()
 {
     //fill the data so we can use replace() later
-    fat->fill(QPair<int, int>(0, 1), freeClusters);
-
 }
 
 
@@ -35,7 +36,7 @@ QString FileSystem::createFile(QString Name, int Size)
 {
 
     //Check if there's enough place
-    int neededClusters = Size / clusterSize;
+    int neededClusters = Size;
     if( freeClusters < neededClusters )
         return "The volume is full";
 
@@ -44,37 +45,35 @@ QString FileSystem::createFile(QString Name, int Size)
     //Add it to the rootDir
     QPair<QString, int> fileEntry(Name, index);
     rootDir->append(fileEntry);
-    //int entryNum = rootDir->indexOf(fileEntry);
 
     //Create the array containing the indexes of the free clusters to use
     QList<int> clusters;
-    clusters[0] = index;
-    int clustersIndex = 1;
+    clusters.append(index);
+    int lastClusters = index+1;
 
-    //Find all clusters
-    for(int i = index; i < fat->length() && clustersIndex < neededClusters; i++)
+    //Find all free clusters
+    while(clusters.size() < neededClusters)
     {
-        if(fat->at(i).first == 0)
-        {
-            clusters[clustersIndex] = i;
-            clustersIndex++;
-        }
+        lastClusters = findFreeCluster(lastClusters);
+        clusters.append(lastClusters++);
     }
 
     //Fill the FAT array with the indexes and insert the last index
-    for(int i = 0; i < neededClusters-1; i++)
+    for(int i = 0; i < clusters.size()-2; i++)
     {
-        fat->insert(clusters[i], QPair<int, int>(1, clusters[i+1]));
+        fat->at(clusters[i])->setVals(clusters[i+1], 1);
     }
-    fat->insert(clusters[neededClusters-1], QPair<int, int>(1, -1));
+    fat->at(neededClusters-1)->setVals(-1, 1);
 
     //Updates the free clusters counter
     freeClusters -= neededClusters;
 
+    qDebug() << "clusters in fs: " << clusters;
+
     //For the signal
     FileEntry* file = new FileEntry(Name, &clusters);
-    emit createdFile(file);
-
+    emit createdFile(file, FileEntryAction::INSERT);
+    qDebug() << "EMITTED";
     return "File successfully created";
 }
 
@@ -103,14 +102,20 @@ QString FileSystem::delFile(QString name)
     do
     {
         lastIndex = indexCluster;
-        indexCluster = fat->at(lastIndex).second;
-        fat->replace(lastIndex, QPair<int, int>(0, -1));
+        indexCluster = fat->at(lastIndex)->nextEntry;
+        fat->at(lastIndex)->setVals(-1,0);
 
-    } while(fat->at(indexCluster).second != -1);
+    } while(fat->at(indexCluster)->state != -1);
 
 
     emit deletedFile(name);
     return "file " + name + " has been removed successfully";
+}
+
+FileSystem::~FileSystem()
+{
+    qDeleteAll(*fat);
+    delete fat;
 }
 
 
@@ -121,13 +126,15 @@ QString FileSystem::delFile(QString name)
 ///
 int FileSystem::findFreeCluster(int index)
 {
-    for(int i = index; i < fat->length(); i++)
+    int count = fat->count();
+    for(int i = index; i < fat->count(); i++)
     {
-        if(fat->at(i).first == 0)
+        if(fat->at(i)->state == 0)
         {
             return i;
         }
     }
+
 
     return -1;
 }
