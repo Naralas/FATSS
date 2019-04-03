@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     console->connectFileSystem(fs);
 
-    connect(fs, &FileSystem::createdFile, fsgui, &FSGUI::updateFileEntry);
+    connect(fs, &FileSystem::createdFile, fsgui, &FSGUI::insertFileEntry);
 
     containerLayout->addWidget(fsgui);
     containerLayout->addWidget(console);

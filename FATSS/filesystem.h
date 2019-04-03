@@ -20,7 +20,7 @@ public:
 
     ~FileSystem();
 signals:
-    void createdFile(FileEntry* file, FileEntryAction action);
+    void createdFile(FileEntry* file);
     void deletedFile(QString filename);
 
 private:

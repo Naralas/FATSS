@@ -72,7 +72,7 @@ QString FileSystem::createFile(QString Name, int Size)
 
     //For the signal
     FileEntry* file = new FileEntry(Name, &clusters);
-    emit createdFile(file, FileEntryAction::INSERT);
+    emit createdFile(file);
     qDebug() << "EMITTED";
     return "File successfully created";
 }
