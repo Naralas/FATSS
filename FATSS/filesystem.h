@@ -16,9 +16,11 @@ public:
     void format();
     QString createFile(QString name, int size);
     QString delFile(QString name);
-
+    QString updateFile(QString Name, int NewSize);
+    QString defragmentation();
 
     ~FileSystem();
+
 signals:
     void createdFile(FileEntry* file);
     void deletedFile(QString filename);
