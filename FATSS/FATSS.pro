@@ -39,7 +39,8 @@ HEADERS += \
     fsgui.h \
     fileentry.h \
     fileentryaction.h \
-    filecolormanager.h
+    filecolormanager.h \
+    fatentry.h
 
 FORMS += \
         mainwindow.ui

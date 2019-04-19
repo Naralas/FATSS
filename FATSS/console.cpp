@@ -1,14 +1,14 @@
 #include "console.h"
+#include <QDebug>
 
 Console::Console(QWidget *parent) : QWidget(parent)
 {
     txtBlockCommand = new QTextEdit(this);
     txtBlockCommand->setReadOnly(true);
     txtBlockCommand->setStyleSheet("QTextEdit { background-color: black; color: green }");
-    txtBlockCommand->setText("Maxime@pc >");
 
     lineEditCommand = new QLineEdit(this);
-    lineEditCommand->setStyleSheet("QLineEdit { background-color: black; color: green }");
+    //lineEditCommand->setStyleSheet("QLineEdit { background-color: black; color: green }");
     connect(lineEditCommand, &QLineEdit::returnPressed, this, &Console::submitCommand);
 
     vLayout =  new QVBoxLayout(this);
@@ -18,6 +18,11 @@ Console::Console(QWidget *parent) : QWidget(parent)
     consoleHandle = "default";
 
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+}
+
+void Console::connectFileSystem(FileSystem *fs)
+{
+    connect(this, &Console::createdFile, fs, &FileSystem::createFile);
 }
 
 Console::~Console()
@@ -37,38 +42,13 @@ void Console::submitCommand()
     QStringList commandArgs = command.split(" ");
     QString commandName = commandArgs[0].toLower();
 
-    if(commandName == "format")
+    if(commandName == "cls")
     {
-        if(commandArgs.length() == 2)
-        {
-
-        }
-        else
-        {
-            writeResult("Format demands 1 argument");
-        }
+        txtBlockCommand->clear();
     }
-    else if(commandName == "cls")
+    else if(commandName == "create")
     {
-        if(commandArgs.length() == 1)
-        {
-            txtBlockCommand->clear();
-        }
-        else
-        {
-            writeResult("Format demands 1 argument");
-        }
-    }
-    else if(commandName == "vcreate")
-    {
-        if(commandArgs.length() == 3)
-        {
-
-        }
-        else
-        {
-            writeResult("Format demands 2 argument");
-        }
+        createFile(commandArgs);
     }
     else
     {
@@ -86,5 +66,26 @@ void Console::writeResult(QString message)
 void Console::writeCommand(QString command)
 {
     txtBlockCommand->append("user@" + consoleHandle + " > " + command);
+}
+
+void Console::createFile(QStringList args)
+{
+    if(args.length() == 3)
+    {
+        bool res = false;
+        int size = args[2].toInt(&res);
+        if(res && args[1] != " ")
+        {
+            emit createdFile(args[1], size);
+        }
+        else
+        {
+            writeResult("A problem occured");
+        }
+    }
+    else
+    {
+        writeResult("Format demands 2 argument");
+    }
 }
 

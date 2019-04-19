@@ -11,8 +11,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QWidget *containerWidget = new QWidget(this);
     QVBoxLayout *containerLayout = new QVBoxLayout(containerWidget);
 
-    containerLayout->addWidget(new FSGUI(this));
-    containerLayout->addWidget(new Console(this));
+    console = new Console(this);
+
+    fs = new FileSystem(100);
+    fsgui = new FSGUI(this);
+
+    console->connectFileSystem(fs);
+
+    connect(fs, &FileSystem::createdFile, fsgui, &FSGUI::insertFileEntry);
+
+    containerLayout->addWidget(fsgui);
+    containerLayout->addWidget(console);
 
     this->setCentralWidget(containerWidget);
 }

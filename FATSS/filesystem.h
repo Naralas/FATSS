@@ -1,10 +1,13 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
-#include <QWidget>
+#include <QObject>
+#include <QDebug>
 #include "fileentry.h"
+#include "fileentryaction.h"
+#include "fatentry.h"
 
-class FileSystem : QObject
+class FileSystem : public QObject
 {
     Q_OBJECT
 
@@ -13,6 +16,10 @@ public:
     void format();
     QString createFile(QString name, int size);
     QString delFile(QString name);
+    QString updateFile(QString Name, int NewSize);
+    QString defragmentation();
+
+    ~FileSystem();
 
 signals:
     void createdFile(FileEntry* file);
@@ -25,7 +32,7 @@ private:
     QString name;
     bool isReady;
 
-    QVector<QPair<int, int>>* fat;
+    QVector<FatEntry*> *fat;
     QVector<QPair<QString, int>>* rootDir;
 
     QVector<int>* data;

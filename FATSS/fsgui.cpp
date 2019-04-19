@@ -65,7 +65,6 @@ void FSGUI::initClusters(QSize diskLayout)
         clusterWidgets.append(tempList);
     }
 
-
     // memory leak but only for tests
     // hope nobody sees this
     // it will be handled differently
@@ -76,7 +75,7 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList->append(29);
     entryItemList->append(25);
     FileEntry *entry = new FileEntry("Example item", entryItemList);
-    updateFileEntry(entry, FileEntryAction::INSERT);
+    //updateFileEntry(entry, FileEntryAction::INSERT);
 
     QList<int> *entryItemList2 = new QList<int>();
     entryItemList2->append(4);
@@ -86,8 +85,7 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList2->append(12);
     FileEntry *entry2 = new FileEntry("Example item2", entryItemList2);
 
-    updateFileEntry(entry2, FileEntryAction::INSERT);
-    updateFileEntry(entry2, FileEntryAction::DELETE);*/
+    */
 }
 
 FSGUI::~FSGUI()
@@ -154,6 +152,7 @@ void FSGUI::removeFileEntry(FileEntry *fileEntry)
 
 void FSGUI::updateFileEntry(FileEntry *fileEntry)
 {
+
     for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
     {
         int index = fileEntry->clusterIndexes->at(i);
@@ -173,7 +172,7 @@ void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
     {
         setWidgetColor(targetWidget, FileColorManager::unhighlightColor);
     }
-
+    qDebug() << highlightEntry->clusterIndexes;
     for(int i = 0; i < highlightEntry->clusterIndexes->size();i++)
     {
         int clusterIndex = highlightEntry->clusterIndexes->at(i);
