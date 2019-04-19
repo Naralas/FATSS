@@ -194,6 +194,9 @@ void FSGUI::resetHighlights()
             setWidgetColor(targetWidget, entry->displayColor);
         }
     }
+
+    for(QListWidgetItem *item : lvTable->selectedItems())
+      item->setSelected(false);
 }
 
 
