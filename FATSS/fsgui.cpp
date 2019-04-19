@@ -75,8 +75,12 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList->append(29);
     entryItemList->append(25);
     FileEntry *entry = new FileEntry("Example item", entryItemList);
+    insertFileEntry(entry);
+
+    //removeFileEntry("Example item");
     //updateFileEntry(entry, FileEntryAction::INSERT);
 
+    /*
     QList<int> *entryItemList2 = new QList<int>();
     entryItemList2->append(4);
     entryItemList2->append(5);
@@ -105,9 +109,6 @@ void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
         case FileEntryAction::UPDATE:
             updateFileEntry(fileEntry);
             break;
-        case FileEntryAction::DELETE:
-            removeFileEntry(fileEntry);
-            break;
     }
 
 }
@@ -133,21 +134,30 @@ void FSGUI::insertFileEntry(FileEntry *fileEntry)
 
 }
 
-void FSGUI::removeFileEntry(FileEntry *fileEntry)
+void FSGUI::removeFileEntry(QString filename)
 {
-    QList<QListWidgetItem*> items = lvTable->findItems(fileEntry->fileName, Qt::MatchExactly);
+    QList<QListWidgetItem*> items = lvTable->findItems(filename, Qt::MatchExactly);
     delete items.first();
 
-    for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
+    auto itrObj = std::find_if(fileEntries.begin(), fileEntries.end(),
+                                          [=](FileEntry *entry) { return QString::compare(entry->fileName, filename, Qt::CaseSensitive) == 0;});
+
+    FileEntry *deleteEntry;
+    if(itrObj == fileEntries.end())
+        return;
+
+    deleteEntry = (*itrObj);
+
+    for(int i = 0; i < deleteEntry->clusterIndexes->size(); i++)
     {
-        int index = fileEntry->clusterIndexes->at(i);
+        int index = deleteEntry->clusterIndexes->at(i);
         QWidget *targetWidget = clusterWidgets.at(index % clusterSize.width())->at(index / clusterSize.height());
         setWidgetColor(targetWidget, FileColorManager::unusedColor);
 
         usedClusters.removeAt(usedClusters.indexOf(targetWidget));
     }
 
-    fileEntries.removeAt(fileEntries.indexOf(fileEntry));
+    fileEntries.removeAt(fileEntries.indexOf(deleteEntry));
 }
 
 void FSGUI::updateFileEntry(FileEntry *fileEntry)

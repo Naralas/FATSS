@@ -23,6 +23,7 @@ private slots:
 
 signals:
     void createdFile(QString filename, int size);
+    void deletedFile(QString filename);
 
 private:
 
@@ -36,6 +37,7 @@ private:
 
     //Methods
     void createFile(QStringList args);
+    void deleteFile(QStringList args);
 
 
 

@@ -42,7 +42,7 @@ public slots:
     void highlightFileClusters(FileEntry* highlightEntry);
     void insertFileEntry(FileEntry *FileEntry);
     void updateFileEntry(FileEntry *fileEntry);
-    void removeFileEntry(FileEntry* fileEntry);
+    void removeFileEntry(QString filename);
     void resetHighlights();
 
 
