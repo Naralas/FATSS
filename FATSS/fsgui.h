@@ -2,7 +2,6 @@
 #define FSGUI_H
 
 #include "fileentry.h"
-#include "fileentryaction.h"
 #include "filecolormanager.h"
 
 #include <QWidget>
@@ -31,14 +30,12 @@ private:
     void initClusters(QSize diskLayout);
     void addTableItem(QString item);
     void setWidgetColor(QWidget *targetWidget, QColor *color);
+    FileEntry* findFileEntry(QString filename);
     ~FSGUI();
 public:
     explicit FSGUI(QWidget *parent = nullptr);
 
-signals:
-
 public slots:
-    void updateFileEntry(FileEntry* fileEntry, FileEntryAction action);
     void highlightFileClusters(FileEntry* highlightEntry);
     void insertFileEntry(FileEntry *FileEntry);
     void updateFileEntry(FileEntry *fileEntry);

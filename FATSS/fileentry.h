@@ -10,6 +10,7 @@ class FileEntry : public QObject
 private:
 public:
     explicit FileEntry(QString name, QList<int>* clusterList, QObject *parent = nullptr);
+    ~FileEntry();
     QString fileName;
     QList<int>* clusterIndexes;
     QColor *displayColor;

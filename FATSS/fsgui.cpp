@@ -76,6 +76,16 @@ void FSGUI::initClusters(QSize diskLayout)
     entryItemList->append(25);
     FileEntry *entry = new FileEntry("Example item", entryItemList);
     insertFileEntry(entry);
+    entryItemList = new QList<int>();
+    entryItemList->append(0);
+    entryItemList->append(1);
+    entryItemList->append(2);
+    entryItemList->append(29);
+    entryItemList->append(25);
+    entryItemList->append(3);
+    entryItemList->append(5);
+    entry = new FileEntry("Example item", entryItemList);
+    updateFileEntry(entry);
 
     //removeFileEntry("Example item");
     //updateFileEntry(entry, FileEntryAction::INSERT);
@@ -98,22 +108,15 @@ FSGUI::~FSGUI()
     qDeleteAll(clusterWidgets);
 }
 
-
-void FSGUI::updateFileEntry(FileEntry *fileEntry, FileEntryAction action)
+FileEntry *FSGUI::findFileEntry(QString filename)
 {
-    switch(action)
-    {
-        case FileEntryAction::INSERT:
-            insertFileEntry(fileEntry);
-            break;
-        case FileEntryAction::UPDATE:
-            updateFileEntry(fileEntry);
-            break;
-    }
-
+    auto itrObj = std::find_if(fileEntries.begin(), fileEntries.end(),
+                                          [=](FileEntry *entry) { return QString::compare(entry->fileName, filename, Qt::CaseSensitive) == 0;});
+    if(itrObj == fileEntries.end())
+        return nullptr;
+    else
+        return (*itrObj);
 }
-
-
 
 void FSGUI::insertFileEntry(FileEntry *fileEntry)
 {
@@ -139,41 +142,27 @@ void FSGUI::removeFileEntry(QString filename)
     QList<QListWidgetItem*> items = lvTable->findItems(filename, Qt::MatchExactly);
     delete items.first();
 
-    auto itrObj = std::find_if(fileEntries.begin(), fileEntries.end(),
-                                          [=](FileEntry *entry) { return QString::compare(entry->fileName, filename, Qt::CaseSensitive) == 0;});
-
-    FileEntry *deleteEntry;
-    if(itrObj == fileEntries.end())
+    FileEntry *entry = findFileEntry(filename);
+    if(entry == nullptr)
         return;
 
-    deleteEntry = (*itrObj);
-
-    for(int i = 0; i < deleteEntry->clusterIndexes->size(); i++)
+    for(int i = 0; i < entry->clusterIndexes->size(); i++)
     {
-        int index = deleteEntry->clusterIndexes->at(i);
+        int index = entry->clusterIndexes->at(i);
         QWidget *targetWidget = clusterWidgets.at(index % clusterSize.width())->at(index / clusterSize.height());
         setWidgetColor(targetWidget, FileColorManager::unusedColor);
 
         usedClusters.removeAt(usedClusters.indexOf(targetWidget));
     }
 
-    fileEntries.removeAt(fileEntries.indexOf(deleteEntry));
+    fileEntries.removeAt(fileEntries.indexOf(entry));
+    delete entry;
 }
 
 void FSGUI::updateFileEntry(FileEntry *fileEntry)
 {
-
-    for(int i = 0; i < fileEntry->clusterIndexes->size(); i++)
-    {
-        int index = fileEntry->clusterIndexes->at(i);
-        QWidget *targetWidget = clusterWidgets.at(index % clusterSize.width())->at(index / clusterSize.height());
-
-        if(!usedClusters.contains(targetWidget))
-            usedClusters.append(targetWidget);
-
-        setWidgetColor(targetWidget, fileEntry->displayColor);
-    }
-
+    removeFileEntry(fileEntry->fileName);
+    insertFileEntry(fileEntry);
 }
 
 void FSGUI::highlightFileClusters(FileEntry *highlightEntry)
@@ -222,3 +211,4 @@ void FSGUI::setWidgetColor(QWidget *targetWidget, QColor *color)
     targetWidget->style()->unpolish(targetWidget);
     targetWidget->style()->polish(targetWidget);
 }
+

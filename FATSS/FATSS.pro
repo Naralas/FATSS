@@ -38,7 +38,6 @@ HEADERS += \
     console.h \
     fsgui.h \
     fileentry.h \
-    fileentryaction.h \
     filecolormanager.h \
     fatentry.h
 

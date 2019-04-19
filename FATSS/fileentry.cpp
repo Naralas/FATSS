@@ -6,3 +6,8 @@ FileEntry::FileEntry(QString name, QList<int>* clusterList, QObject *parent) : Q
     clusterIndexes = clusterList;
 }
 
+FileEntry::~FileEntry()
+{
+    delete clusterIndexes;
+}
+
