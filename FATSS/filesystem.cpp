@@ -144,7 +144,7 @@ QString FileSystem::updateFile(QString name, int newSize)
             fat->at(indexCluster)->setVals(nextCluster, 1);
             indexCluster = nextCluster;
             size++;
-
+            clusters.append(indexCluster);
         }
 
         fat->at(indexCluster)->setVals(-1, 1);
