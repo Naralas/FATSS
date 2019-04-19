@@ -161,11 +161,48 @@ QString FileSystem::defragmentation()
 {
     //Go through all of the clusters
     int currentFile = -1;
-    int nextClusters = -1;
-    QList<int> defragmentedFile();
+    int nextCluster = -1;
+    int lastFreeCluster = -1;
+
+    QList<int> defragmentedFile;
+
     for(int i = 0; i < fat->length(); i++)
     {
-        //if(currentFile == -1);
+        //If we're searching for the next file to defragment
+        if(currentFile == -1)
+        {
+            //If we're on a cluster and it's occupied
+            if(fat->at(i)->state == 1)
+            {
+                //It means we're starting to defragment a new file
+                currentFile = 1;
+                nextCluster = fat->at(i)->nextEntry;
+            }
+            else
+            {
+                //We're still searching for a new file to defragment
+                lastFreeCluster = i;
+            }
+        }
+
+        //If we're currently defragmenting a file
+        if(currentFile == 1)
+        {
+            //If the cluster is not free
+            if(fat->at(i)->state == 1)
+            {
+                //If we're already on the next cluster
+                if(i == nextCluster)
+                {
+                    //It means we're still correctly following the file
+                }
+                else
+                {
+                    //Put the foreign cluster to the end /!\ UPDATE DIR ENTRY
+                    //
+                }
+            }
+        }
 
         //Check current Cluster: Empty or filled
         //If we're currently defragmenting a file, and the cluster is empty
@@ -176,7 +213,6 @@ QString FileSystem::defragmentation()
         //If we're not defragmenting a file, and the cluster is empty, mark the place as first empty place
             //Then continue searching for the first cluster of a file
         //If we're not defragmenting a file, and the cluster is not empty *Problem* when the cluster is not the starting cluster
-
 
     }
 }
