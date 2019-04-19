@@ -83,18 +83,18 @@ QString FileSystem::createFile(QString name, int Size)
 
 QString FileSystem::updateFile(QString name, int newSize)
 {
-    //Find file in root directory
-    int indexCluster = -1;
+    int indexFile = -1;
     for(int i = 0; i < rootDir->length(); i++)
     {
         if(rootDir->at(i).first == name.toLower())
         {
-            indexCluster = i;
+            indexFile = i;
         }
     }
 
-    if(indexCluster == -1)
+    if(indexFile == -1)
         return "No file with this name";
+    int indexCluster = rootDir->at(indexFile).second;
 
     //Run through the existing size of the file
     //If the Newsize is smaller than the actual size -> continue and unset the clusters
@@ -105,9 +105,11 @@ QString FileSystem::updateFile(QString name, int newSize)
 
     bool isLarger = false;
     int size;
+    QList<int> clusters;
     // Check if it's a reduction or an inflation
     for(size = 0; size < newSize; size++) //Run through while we haven't reached the newSize
     {
+        clusters.append(indexCluster);
         //indexCluster is the pointer on the current cluster in the fat
         if(fat->at(indexCluster)->nextEntry == -1)
         {
@@ -116,6 +118,8 @@ QString FileSystem::updateFile(QString name, int newSize)
             isLarger = true;
             break;
         }
+
+        indexCluster = fat->at(indexCluster)->nextEntry;
 
     }//If we finish the for loop without entering the condition, it means the size is at least equal to the NewSize, so it's a reduction
 
@@ -140,6 +144,7 @@ QString FileSystem::updateFile(QString name, int newSize)
             fat->at(indexCluster)->setVals(nextCluster, 1);
             indexCluster = nextCluster;
             size++;
+
         }
 
         fat->at(indexCluster)->setVals(-1, 1);
@@ -147,14 +152,14 @@ QString FileSystem::updateFile(QString name, int newSize)
     else //Reduction
     {
         //While we're not at the end of the file, unset the clusters' nextentry
-        while(fat->at(indexCluster)->state == 1 && fat->at(indexCluster)->nextEntry != 0)
+        while(indexCluster != -1)
         {
             fat->at(indexCluster)->state = 0;
             indexCluster = fat->at(indexCluster)->nextEntry;
         }
     }
-    //FileEntry* file = new FileEntry(name, clusters);
-    //emit updatedFile(file);
+    FileEntry* file = new FileEntry(name, &clusters);
+    emit updatedFile(file);
     return "Done";
 }
 
