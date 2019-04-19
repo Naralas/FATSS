@@ -23,6 +23,7 @@ Console::Console(QWidget *parent) : QWidget(parent)
 void Console::connectFileSystem(FileSystem *fs)
 {
     connect(this, &Console::createdFile, fs, &FileSystem::createFile);
+    connect(this, &Console::deletedFile, fs, &FileSystem::delFile);
 }
 
 Console::~Console()
@@ -49,6 +50,10 @@ void Console::submitCommand()
     else if(commandName == "create")
     {
         createFile(commandArgs);
+    }
+    else if(commandName == "delete")
+    {
+        deleteFile(commandArgs);
     }
     else
     {
@@ -88,4 +93,24 @@ void Console::createFile(QStringList args)
         writeResult("Format demands 2 argument");
     }
 }
+
+void Console::deleteFile(QStringList args)
+{
+    if(args.length() == 2)
+    {
+        if(args[1] != " ")
+        {
+            emit deletedFile(args[1]);
+        }
+        else
+        {
+            writeResult("A problem occured");
+        }
+    }
+    else
+    {
+        writeResult("Format demands 2 argument");
+    }
+}
+
 

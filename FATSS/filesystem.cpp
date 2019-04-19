@@ -32,7 +32,7 @@ void FileSystem::format()
 /// \param Size
 /// \return
 ///
-QString FileSystem::createFile(QString Name, int Size)
+QString FileSystem::createFile(QString name, int Size)
 {
 
     //Check if there's enough place
@@ -43,7 +43,7 @@ QString FileSystem::createFile(QString Name, int Size)
     //Check for the first free place
     int index = findFreeCluster(0);
     //Add it to the rootDir
-    QPair<QString, int> fileEntry(Name, index);
+    QPair<QString, int> fileEntry(name, index);
     rootDir->append(fileEntry);
 
     //Create the array containing the indexes of the free clusters to use
@@ -74,20 +74,20 @@ QString FileSystem::createFile(QString Name, int Size)
     }
 
     //For the signal
-    FileEntry* file = new FileEntry(Name, clusters);
+    FileEntry* file = new FileEntry(name, clusters);
     emit createdFile(file);
     qDebug() << "EMITTED";
     return "File successfully created";
 }
 
 
-QString FileSystem::updateFile(QString Name, int NewSize)
+QString FileSystem::updateFile(QString name, int newSize)
 {
     //Find file in root directory
     int indexCluster = -1;
     for(int i = 0; i < rootDir->length(); i++)
     {
-        if(rootDir->at(i).first == Name.toLower())
+        if(rootDir->at(i).first == name.toLower())
         {
             indexCluster = i;
         }
@@ -106,7 +106,7 @@ QString FileSystem::updateFile(QString Name, int NewSize)
     bool isLarger = false;
     int size;
     // Check if it's a reduction or an inflation
-    for(size = 0; size < NewSize; size++) //Run through while we haven't reached the newSize
+    for(size = 0; size < newSize; size++) //Run through while we haven't reached the newSize
     {
         //indexCluster is the pointer on the current cluster in the fat
         if(fat->at(indexCluster)->nextEntry == -1)
@@ -125,12 +125,12 @@ QString FileSystem::updateFile(QString Name, int NewSize)
     if(isLarger)
     {
         //Check if the newsize is within the free clusters
-        if(freeClusters < NewSize-size )
+        if(freeClusters < newSize-size )
             return "Not enough space left";
 
         int nextCluster;
         //While the size is smaller than the newsize, we keep adding to the chain
-        while(size < NewSize)
+        while(size < newSize)
         {
             freeClusters--;
             //Find next cluster
@@ -153,7 +153,8 @@ QString FileSystem::updateFile(QString Name, int NewSize)
             indexCluster = fat->at(indexCluster)->nextEntry;
         }
     }
-
+    //FileEntry* file = new FileEntry(name, clusters);
+    //emit updatedFile(file);
     return "Done";
 }
 
