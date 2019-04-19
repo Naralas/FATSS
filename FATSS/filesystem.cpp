@@ -225,29 +225,31 @@ QString FileSystem::defragmentation()
 QString FileSystem::delFile(QString name)
 {
     //Find file in root directory
-    int indexCluster = -1;
+    int indexFile = -1;
     for(int i = 0; i < rootDir->length(); i++)
     {
         if(rootDir->at(i).first == name.toLower())
         {
-            indexCluster = i;
+            indexFile = i;
         }
     }
 
-    if(indexCluster == -1)
+    if(indexFile == -1)
         return "No file with this name";
-
+    int indexCluster = rootDir->at(indexFile).second;
+    rootDir->remove(indexFile);
+    int sizeFile = 0;
     //Unset the chaining clusters
     int lastIndex;
     do
     {
         lastIndex = indexCluster;
         indexCluster = fat->at(lastIndex)->nextEntry;
-        fat->at(lastIndex)->setVals(-1,0);
+        fat->at(lastIndex)->state = 0;
+        sizeFile++;
+    } while(indexCluster != -1);
 
-    } while(fat->at(indexCluster)->state != -1);
-
-
+    freeClusters += sizeFile;
     emit deletedFile(name);
     return "file " + name + " has been removed successfully";
 }
