@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDebug>
 #include "fileentry.h"
-#include "fileentryaction.h"
 #include "fatentry.h"
 
 class FileSystem : public QObject
