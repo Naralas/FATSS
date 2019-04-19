@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QMap>
 
 #include "filesystem.h"
 
@@ -19,13 +20,18 @@ public:
     ~Console();
 
 private slots:
+
     void submitCommand();
 
 signals:
     void createdFile(QString filename, int size);
     void deletedFile(QString filename);
+    void updatedFile(QString filename, int newSize);
 
 private:
+
+    typedef void(Console::*pfunc)(QStringList);
+    QMap<QString, pfunc> commandsMap;
 
     //Vars
     QString consoleHandle;
@@ -38,6 +44,7 @@ private:
     //Methods
     void createFile(QStringList args);
     void deleteFile(QStringList args);
+    void updateFile(QStringList args);
 
 
 

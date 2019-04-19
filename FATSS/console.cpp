@@ -18,12 +18,17 @@ Console::Console(QWidget *parent) : QWidget(parent)
     consoleHandle = "default";
 
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    commandsMap["create"] = &Console::createFile;
+    commandsMap["delete"] = &Console::deleteFile;
+    commandsMap["update"] = &Console::updateFile;
 }
 
 void Console::connectFileSystem(FileSystem *fs)
 {
     connect(this, &Console::createdFile, fs, &FileSystem::createFile);
     connect(this, &Console::deletedFile, fs, &FileSystem::delFile);
+    connect(this, &Console::updatedFile, fs, &FileSystem::updateFile);
 }
 
 Console::~Console()
@@ -47,13 +52,9 @@ void Console::submitCommand()
     {
         txtBlockCommand->clear();
     }
-    else if(commandName == "create")
+    else if (commandsMap.keys().contains(commandName))
     {
-        createFile(commandArgs);
-    }
-    else if(commandName == "delete")
-    {
-        deleteFile(commandArgs);
+        (this->*commandsMap[commandName])(commandArgs);
     }
     else
     {
@@ -101,6 +102,27 @@ void Console::deleteFile(QStringList args)
         if(args[1] != " ")
         {
             emit deletedFile(args[1]);
+        }
+        else
+        {
+            writeResult("A problem occured");
+        }
+    }
+    else
+    {
+        writeResult("Format demands 2 argument");
+    }
+}
+
+void Console::updateFile(QStringList args)
+{
+    if(args.length() == 3)
+    {
+        bool res = false;
+        int size = args[2].toInt(&res);
+        if(res && args[1] != " ")
+        {
+            emit updatedFile(args[1], size);
         }
         else
         {
