@@ -105,11 +105,11 @@ QString FileSystem::updateFile(QString name, int newSize)
 
     bool isLarger = false;
     int size;
-    QList<int> clusters;
+    QList<int> *clusters = new QList<int>();
     // Check if it's a reduction or an inflation
     for(size = 0; size < newSize; size++) //Run through while we haven't reached the newSize
     {
-        clusters.append(indexCluster);
+        clusters->append(indexCluster);
         //indexCluster is the pointer on the current cluster in the fat
         if(fat->at(indexCluster)->nextEntry == -1)
         {
@@ -144,7 +144,7 @@ QString FileSystem::updateFile(QString name, int newSize)
             fat->at(indexCluster)->setVals(nextCluster, 1);
             indexCluster = nextCluster;
             size++;
-            clusters.append(indexCluster);
+            clusters->append(indexCluster);
         }
 
         fat->at(indexCluster)->setVals(-1, 1);
@@ -158,7 +158,7 @@ QString FileSystem::updateFile(QString name, int newSize)
             indexCluster = fat->at(indexCluster)->nextEntry;
         }
     }
-    FileEntry* file = new FileEntry(name, &clusters);
+    FileEntry* file = new FileEntry(name, clusters);
     emit updatedFile(file);
     return "Done";
 }
