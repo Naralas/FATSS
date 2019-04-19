@@ -27,7 +27,6 @@ private:
     QList<QList<QWidget*>*> clusterWidgets;
     QList<QWidget*> usedClusters;
 
-
     QSize clusterSize;
     void initClusters(QSize diskLayout);
     void addTableItem(QString item);

@@ -92,6 +92,7 @@ void FSGUI::initClusters(QSize diskLayout)
 
 FSGUI::~FSGUI()
 {
+    qDeleteAll(fileEntries);
     qDeleteAll(clusterWidgets);
 }
 
