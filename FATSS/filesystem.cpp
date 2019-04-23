@@ -105,22 +105,22 @@ QString FileSystem::updateFile(QString name, int newSize)
 
     bool isLarger = false;
     int size;
-    QList<int> clusters;
+    int lastCluster;
+    QList<int> *clusters = new QList<int>();
     // Check if it's a reduction or an inflation
-    for(size = 0; size < newSize; size++) //Run through while we haven't reached the newSize
+    for(size = 1; size <= newSize; size++) //Run through while we haven't reached the newSize
     {
-        clusters.append(indexCluster);
+        clusters->append(indexCluster);
         //indexCluster is the pointer on the current cluster in the fat
-        if(fat->at(indexCluster)->nextEntry == -1)
+        if(fat->at(indexCluster)->nextEntry ==  -1)
         {
             //We go here if we haven't reached the newSize and the size is already reached
             //It means the actual size is smaller than NewSize, so inflation
             isLarger = true;
             break;
         }
-
+        lastCluster = indexCluster;
         indexCluster = fat->at(indexCluster)->nextEntry;
-
     }//If we finish the for loop without entering the condition, it means the size is at least equal to the NewSize, so it's a reduction
 
 
@@ -131,26 +131,35 @@ QString FileSystem::updateFile(QString name, int newSize)
         //Check if the newsize is within the free clusters
         if(freeClusters < newSize-size )
             return "Not enough space left";
+        freeClusters -= newSize - size;
+
 
         int nextCluster;
         //While the size is smaller than the newsize, we keep adding to the chain
         while(size < newSize)
         {
-            freeClusters--;
+            //Find next cluster
+            //Link current to next cluster
+            //update next cluster to used
+            //add next cluster to used cluster
+
             //Find next cluster
             nextCluster = findFreeCluster(indexCluster);
+            clusters->append(nextCluster);
 
             //update current cluster
-            fat->at(indexCluster)->setVals(nextCluster, 1);
+            fat->at(indexCluster)->nextEntry = nextCluster;
+
+            //Update next cluster
+            fat->at(nextCluster)->setVals(-1, 1);
+
             indexCluster = nextCluster;
             size++;
-            clusters.append(indexCluster);
         }
-
-        fat->at(indexCluster)->setVals(-1, 1);
     }
     else //Reduction
     {
+        fat->at(lastCluster)->nextEntry = -1;
         //While we're not at the end of the file, unset the clusters' nextentry
         while(indexCluster != -1)
         {
@@ -158,7 +167,8 @@ QString FileSystem::updateFile(QString name, int newSize)
             indexCluster = fat->at(indexCluster)->nextEntry;
         }
     }
-    FileEntry* file = new FileEntry(name, &clusters);
+
+    FileEntry* file = new FileEntry(name, clusters);
     emit updatedFile(file);
     return "Done";
 }
