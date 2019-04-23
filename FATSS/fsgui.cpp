@@ -199,10 +199,6 @@ void FSGUI::resetHighlights()
       item->setSelected(false);
 }
 
-
-
-
-
 void FSGUI::addTableItem(QString item)
 {
     lvTable->addItem(item);

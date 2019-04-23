@@ -105,7 +105,9 @@ QString FileSystem::updateFile(QString name, int newSize)
 
     bool isLarger = false;
     int size;
+
     int lastCluster;
+
     QList<int> *clusters = new QList<int>();
     // Check if it's a reduction or an inflation
     for(size = 1; size <= newSize; size++) //Run through while we haven't reached the newSize
