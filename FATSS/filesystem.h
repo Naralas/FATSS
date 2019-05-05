@@ -12,11 +12,9 @@ class FileSystem : public QObject
 
 public:
     FileSystem(int Size);
-    void format();
     QString createFile(QString name, int size);
     QString delFile(QString name);
     QString updateFile(QString name, int newSize);
-    QString defragmentation();
 
     ~FileSystem();
 

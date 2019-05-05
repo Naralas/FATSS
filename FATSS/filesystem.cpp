@@ -9,22 +9,8 @@ FileSystem::FileSystem(int Size)
         fat->insert(i, new FatEntry());
     }
     size = Size;
-
-    //Size equals clusters
-
     freeClusters = Size;
-    data = new QVector<int>(freeClusters);
 }
-
-
-///
-/// \brief FileSystem::format: Prepare the volume for it to be used
-///
-void FileSystem::format()
-{
-    //fill the data so we can use replace() later
-}
-
 
 ///
 /// \brief FileSystem::createFile: Create a file with the given filename, and size
@@ -173,66 +159,6 @@ QString FileSystem::updateFile(QString name, int newSize)
     FileEntry* file = new FileEntry(name, clusters);
     emit updatedFile(file);
     return "Done";
-}
-
-QString FileSystem::defragmentation()
-{
-    //Go through all of the clusters
-    int currentFile = -1;
-    int nextCluster = -1;
-    int lastFreeCluster = -1;
-
-    QList<int> defragmentedFile;
-
-    for(int i = 0; i < fat->length(); i++)
-    {
-        //If we're searching for the next file to defragment
-        if(currentFile == -1)
-        {
-            //If we're on a cluster and it's occupied
-            if(fat->at(i)->state == 1)
-            {
-                //It means we're starting to defragment a new file
-                currentFile = 1;
-                nextCluster = fat->at(i)->nextEntry;
-            }
-            else
-            {
-                //We're still searching for a new file to defragment
-                lastFreeCluster = i;
-            }
-        }
-
-        //If we're currently defragmenting a file
-        if(currentFile == 1)
-        {
-            //If the cluster is not free
-            if(fat->at(i)->state == 1)
-            {
-                //If we're already on the next cluster
-                if(i == nextCluster)
-                {
-                    //It means we're still correctly following the file
-                }
-                else
-                {
-                    //Put the foreign cluster to the end /!\ UPDATE DIR ENTRY
-                    //
-                }
-            }
-        }
-
-        //Check current Cluster: Empty or filled
-        //If we're currently defragmenting a file, and the cluster is empty
-            //Take the next cluster of the file, and move it to the current place then update the last cluster pointer
-        //If we're currently defragmenting a file, but the cluster is not empty
-            //Take the cluster currently residing in it, and move it to the list and *problem* update the last cluster of the file
-            //Then do the above step
-        //If we're not defragmenting a file, and the cluster is empty, mark the place as first empty place
-            //Then continue searching for the first cluster of a file
-        //If we're not defragmenting a file, and the cluster is not empty *Problem* when the cluster is not the starting cluster
-
-    }
 }
 
 ///
